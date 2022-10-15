@@ -1,9 +1,6 @@
 package com.demo.ecommerce.service;
 
 import com.demo.ecommerce.model.Product;
-import com.demo.ecommerce.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
