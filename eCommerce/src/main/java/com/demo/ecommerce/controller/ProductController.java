@@ -1,6 +1,7 @@
 package com.demo.ecommerce.controller;
 import com.demo.ecommerce.dto.ProductDto;
 import com.demo.ecommerce.model.Category;
+import com.demo.ecommerce.model.Product;
 import com.demo.ecommerce.repository.CategoryRepository;
 import com.demo.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ public class ProductController {
         productService.updateProduct(productDto, productId);
         return new ResponseEntity<ApiResponse>(new ApiResponse(true, "product has been updated"), HttpStatus.OK);
     }
+
+    @PutMapping("/{id}")
+    public Product updateProduct(@RequestBody Product product){
+        return this.productService.updateProduct(product);
+    }
+
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") long pid){

@@ -4,6 +4,7 @@ import com.demo.ecommerce.dto.ProductDto;
 import com.demo.ecommerce.model.Category;
 import com.demo.ecommerce.model.Product;
 import com.demo.ecommerce.repository.ProductRepository;
+import com.demo.ecommerce.service.Implement.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
-public class ProductService {
+public class ProductService implements ProductServiceImp {
     @Autowired
     ProductRepository productRepository;
 
@@ -56,10 +57,16 @@ public class ProductService {
         product.setPrice(productDto.getPrice());
         productRepository.save(product);
     }
+    // Delete
 
     public void deleteProduct(long pid){
         Product product = new Product();
         product.setPid(pid);
         this.productRepository.delete(product);
+    }
+
+    @Override
+    public Product updateProduct(Product product) {
+        return this.productRepository.save(product);
     }
 }
