@@ -1,13 +1,10 @@
 package com.demo.ecommerce.service.Implement;
 
 import com.demo.ecommerce.model.Category;
-import com.demo.ecommerce.model.Product;
 import com.demo.ecommerce.repository.CategoryRepository;
-import com.demo.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
