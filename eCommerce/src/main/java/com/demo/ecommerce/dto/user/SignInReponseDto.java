@@ -5,10 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class SignInReponseDto {
 
     private String status;
     private String token;
+
+    public SignInReponseDto(String status, String token) {
+        this.status = status;
+        this.token = token;
+    }
 }

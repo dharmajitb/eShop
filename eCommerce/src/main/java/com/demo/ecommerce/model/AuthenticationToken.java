@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "tokens")
 public class AuthenticationToken {
@@ -26,7 +26,13 @@ public class AuthenticationToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-
     public AuthenticationToken(User user) {
+        this.user = user;
+        this.createdDate = new Date();
+        this.token = UUID.randomUUID().toString();
+    }
+
+    public AuthenticationToken() {
+
     }
 }

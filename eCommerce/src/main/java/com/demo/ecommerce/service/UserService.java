@@ -22,41 +22,35 @@ import java.util.Objects;
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
     @Transactional
     public ResponseDto signUp(SignupDto signupDto) {
-        // check if user is already present
-        if (Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))) {
-            throw new CustomException("user already present");
+        //check user already or not
+        if(Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))){
+            throw new CustomException("User already Created");
         }
-
-
-        // hash the password
+        //encrypt password
         String encryptedPassword = signupDto.getPassword();
-
         try {
             encryptedPassword = hashPassword(signupDto.getPassword());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+        //save user
+        User user = new User(signupDto.getFirstName(),signupDto.getLastName(),signupDto.getEmail(),encryptedPassword);
+        User save = userRepository.save(user);
 
-        User user = new User(signupDto.getFirstName(), signupDto.getLastName(),signupDto.getEmail(), encryptedPassword);
-
-        userRepository.save(user);
-
-        // save the user
-
-        // create the token
-
+        //Generate Authorization token
         final AuthenticationToken authenticationToken = new AuthenticationToken(user);
-
+        //Save the token by calling authenticationService
         authenticationService.saveConfirmationToken(authenticationToken);
+        //encrypt password
+        ResponseDto responseDto = new ResponseDto("success","Create new user");
 
-        ResponseDto responseDto = new ResponseDto("success", "user created ");
         return responseDto;
     }
 
@@ -70,17 +64,17 @@ public class UserService {
     }
 
     public SignInReponseDto signIn(SignInDto signInDto) {
-        // find user by email
-
+        // find user email
         User user = userRepository.findByEmail(signInDto.getEmail());
 
         if (Objects.isNull(user)) {
             throw new AuthenticationFailException("user is not valid");
         }
 
-        // hash the password
-
         try {
+            // compare the password in DB
+
+            // check password match
             if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
                 throw new AuthenticationFailException("wrong password");
             }
@@ -88,12 +82,13 @@ public class UserService {
             e.printStackTrace();
         }
 
-        // compare the password in DB
 
-        // if password match
+
+        // retrive the token
         AuthenticationToken token = authenticationService.getToken(user);
 
-        // check token
+
+        // return response
 
         if (Objects.isNull(token)) {
             throw new CustomException("token is not present");
@@ -101,6 +96,6 @@ public class UserService {
 
         return new SignInReponseDto("sucess", token.getToken());
 
-        // return response
+
     }
 }

@@ -5,9 +5,11 @@ import com.demo.ecommerce.model.AuthenticationToken;
 import com.demo.ecommerce.model.User;
 import com.demo.ecommerce.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Service
 public class AuthenticationService {
     @Autowired
     TokenRepository tokenRepository;
