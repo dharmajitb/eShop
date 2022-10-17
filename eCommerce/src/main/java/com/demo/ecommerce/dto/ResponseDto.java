@@ -1,6 +1,5 @@
 package com.demo.ecommerce.dto;
 
-import com.demo.ecommerce.model.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentInvoiceAcknowledgement {
-
+public class ResponseDto {
     private String status;
-    private double totalPayment;
-    private String InvoiceNo;
-    private Customer customer;
-
+    private String message;
 }

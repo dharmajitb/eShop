@@ -1,4 +1,4 @@
-package com.demo.ecommerce.service.Implement;
+package com.demo.ecommerce.service;
 
 import com.demo.ecommerce.model.Category;
 import com.demo.ecommerce.repository.CategoryRepository;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 @Service
-public class CategoryServiceImpl{
+public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;

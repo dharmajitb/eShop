@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
-
+    // for create it can be optional
+    // for update we need the id
     private long id;
     private @NotNull String name;
     private @NotNull double price;

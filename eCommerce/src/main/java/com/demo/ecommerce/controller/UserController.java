@@ -1,50 +1,33 @@
 package com.demo.ecommerce.controller;
 
-import com.demo.ecommerce.model.Author;
-import com.demo.ecommerce.service.AuthorService;
-//import com.demo.ecommerce.utils.JwtUtil;
+
+import com.demo.ecommerce.dto.ResponseDto;
+import com.demo.ecommerce.dto.user.SignInDto;
+import com.demo.ecommerce.dto.user.SignInReponseDto;
+import com.demo.ecommerce.dto.user.SignupDto;
+import com.demo.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    private AuthorService authorService;
+    private UserService userServices;
 
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-
-    @PostMapping("/")
-    public ResponseEntity<Author> addProduct(@RequestBody Author author) throws Exception {
-        Author author1 = this.authorService.createUser(author);
-        return ResponseEntity.ok(author1);
+    @PostMapping("/signup")
+    public ResponseDto signup(@RequestBody SignupDto signupDto) {
+        return userServices.signUp(signupDto);
     }
 
-    @GetMapping("/user/{username}")
-    public Author getUser(@PathVariable("username") String username){
-        return this.authorService.getUser(username);
+    // Sign in
+    @PostMapping("/signin")
+    public SignInReponseDto signIn(@RequestBody SignInDto signInDto) {
+        return userServices.signIn(signInDto);
     }
 //
-//    @PostMapping("/authenticate")
-//    public String generateToken(@RequestBody Author author) throws Exception {
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(author.getUsername(),author.getPassword()));
-//        }catch (Exception ex){
-//            throw new Exception("Invalid username or password");
-//        }
-//        return jwtUtil.generateToken(author.getUsername());
-//
-//    }
+    }
 
-    @GetMapping("/")
-    public String welcome() {
-        return "Welcome to Dashboard !!";
-    }
-}
+
+
