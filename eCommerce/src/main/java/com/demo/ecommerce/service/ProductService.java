@@ -40,6 +40,7 @@ public class ProductService implements ProductServiceImp {
     //get all product
     public List<ProductDto> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
+
         List<ProductDto> productDtos = new ArrayList<>();
         for(Product product: allProducts) {
             productDtos.add(getProductDto(product));
