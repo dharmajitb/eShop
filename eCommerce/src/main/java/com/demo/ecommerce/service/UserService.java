@@ -1,101 +1,51 @@
 package com.demo.ecommerce.service;
 
-
-import com.demo.ecommerce.dto.ResponseDto;
-import com.demo.ecommerce.dto.user.SignInDto;
-import com.demo.ecommerce.dto.user.SignInReponseDto;
-import com.demo.ecommerce.dto.user.SignupDto;
-import com.demo.ecommerce.exception.AuthenticationFailException;
-import com.demo.ecommerce.exception.CustomException;
-import com.demo.ecommerce.model.AuthenticationToken;
 import com.demo.ecommerce.model.User;
+import com.demo.ecommerce.model.UserRole;
+import com.demo.ecommerce.repository.RoleRepository;
 import com.demo.ecommerce.repository.UserRepository;
+import com.demo.ecommerce.service.Implement.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
+import java.util.Set;
 @Service
-public class UserService {
-
+public class UserService implements UserServiceImpl {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
-    private AuthenticationService authenticationService;
+    private RoleRepository roleRepository;
 
-    @Transactional
-    public ResponseDto signUp(SignupDto signupDto) {
-        //check user already or not
-        if(Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))){
-            throw new CustomException("User already Created");
-        }
-        //encrypt password
-        String encryptedPassword = signupDto.getPassword();
-        try {
-            encryptedPassword = hashPassword(signupDto.getPassword());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        //save user
-        User user = new User(signupDto.getFirstName(),signupDto.getLastName(),signupDto.getEmail(),encryptedPassword);
-        User save = userRepository.save(user);
-
-        //Generate Authorization token
-        final AuthenticationToken authenticationToken = new AuthenticationToken(user);
-        //Save the token by calling authenticationService
-        authenticationService.saveConfirmationToken(authenticationToken);
-        //encrypt password
-        ResponseDto responseDto = new ResponseDto("success","Create new user");
-
-        return responseDto;
-    }
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        String hash = DatatypeConverter
-                .printHexBinary(digest).toUpperCase();
-        return hash;
-    }
-
-    public SignInReponseDto signIn(SignInDto signInDto) {
-        // find user email
-        User user = userRepository.findByEmail(signInDto.getEmail());
-
-        if (Objects.isNull(user)) {
-            throw new AuthenticationFailException("user is not valid");
-        }
-
-        try {
-            // compare the password in DB
-
-            // check password match
-            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
-                throw new AuthenticationFailException("wrong password");
+    @Override
+    public User createUser(User user, Set<UserRole> userRoles) throws Exception {
+        User local = this.userRepository.findByUsername(user.getUsername());
+        if(local != null){
+            System.out.println("User is Already there !! ");
+            throw new Exception("User already present !!");
+        }else {
+            //User Create
+            for (UserRole ur : userRoles) {
+                roleRepository.save(ur.getRole());
             }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            user.getUserRole().addAll(userRoles);
+            local = this.userRepository.save(user);
+            return local;
         }
+    }
 
+    //getting user ----get User
+    @Override
+    public User getUser(String username) {
+        return this.userRepository.findByUsername(username);
+    }
 
-
-        // retrive the token
-        AuthenticationToken token = authenticationService.getToken(user);
-
-
-        // return response
-
-        if (Objects.isNull(token)) {
-            throw new CustomException("token is not present");
-        }
-
-        return new SignInReponseDto("sucess", token.getToken());
-
-
+    //Delete User By ID
+    @Override
+    public void deleteUser(Long userId) {
+        this.userRepository.deleteById(userId);
+    }
+    //update
+    @Override
+    public void updateUser(User user, long userId) {
     }
 }
