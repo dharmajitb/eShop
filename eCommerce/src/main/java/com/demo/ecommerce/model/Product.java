@@ -19,7 +19,7 @@ public class Product {
     private Long pid;
     private String name;
     private double price;
-    private String description;
+    private int AvailableQuantity;
 
     @ManyToOne
     @JsonIgnore

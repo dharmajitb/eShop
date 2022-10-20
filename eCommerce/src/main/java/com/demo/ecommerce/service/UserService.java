@@ -8,6 +8,7 @@ import com.demo.ecommerce.service.Implement.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Set;
 @Service
 public class UserService implements UserServiceImpl {
@@ -15,6 +16,21 @@ public class UserService implements UserServiceImpl {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    @Override
+    public User signUpUser(HashMap<String, String> signupRequest) {
+
+            User user = new User();
+            user.setFirstName(signupRequest.get("Firstname"));
+            user.setLastName(signupRequest.get("lastName"));
+            user.setUsername(signupRequest.get("name"));
+            user.setEmail(signupRequest.get("email"));
+            user.setPhone(signupRequest.get("mobile"));
+            user.setPassword(signupRequest.get("password"));
+            userRepository.save(user);
+            return user;
+
+    }
 
     @Override
     public User createUser(User user, Set<UserRole> userRoles) throws Exception {

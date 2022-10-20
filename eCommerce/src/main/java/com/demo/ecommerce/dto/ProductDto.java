@@ -15,6 +15,6 @@ public class ProductDto {
     private long id;
     private @NotNull String name;
     private @NotNull double price;
-    private @NotNull String description;
+    private @NotNull int AvailableQuantity;
     private @NotNull Integer categoryId;
 }

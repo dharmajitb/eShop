@@ -23,14 +23,14 @@ public class ProductService implements ProductServiceImp {
         product.setName(productDto.getName());
         product.setCategory(category);
         product.setPrice(productDto.getPrice());
-        product.setDescription(productDto.getDescription());
+        product.setAvailableQuantity(productDto.getAvailableQuantity());
         productRepository.save(product);
     }
 
     //get Product
     public ProductDto getProductDto(Product product) {
         ProductDto productDto = new ProductDto();
-        productDto.setDescription(product.getDescription());
+        productDto.setAvailableQuantity(product.getAvailableQuantity());
         productDto.setName(product.getName());
         productDto.setCategoryId(product.getCategory().getCid());
         productDto.setPrice(product.getPrice());
@@ -54,7 +54,7 @@ public class ProductService implements ProductServiceImp {
             throw new Exception("product not present");
         }
         Product product = optionalProduct.get();
-        product.setDescription(productDto.getDescription());
+        product.setAvailableQuantity(productDto.getAvailableQuantity());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         productRepository.save(product);
