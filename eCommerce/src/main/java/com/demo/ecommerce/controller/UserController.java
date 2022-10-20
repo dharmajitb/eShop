@@ -6,6 +6,7 @@ import com.demo.ecommerce.model.User;
 import com.demo.ecommerce.model.UserRole;
 import com.demo.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -17,10 +18,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     //Create User
-    @PostMapping("")
+    @PostMapping("/")
     public User createUser(@RequestBody User user) throws Exception {
         Set<UserRole> roles = new HashSet<>();
+
+        //Encoding password bCryptPasswordEncoder
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+
 
         Role role = new Role();
         role.setRoleId(2L);
@@ -36,18 +44,18 @@ public class UserController {
 
     }
 
-    @GetMapping("{username}")
+    @GetMapping("/{username}")
     public User getUser(@PathVariable("username") String username){
         return  this.userService.getUser(username);
     }
 
     //    delete the user
-    @DeleteMapping("{userId}")
+    @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable("userId") long userId){
         this.userService.deleteUser(userId);
     }
     //Update user --->>>>> put method
-    @PutMapping("{userId}")
+    @PutMapping("/{userId}")
     public User updateUser(@RequestBody User user, @PathVariable("userId") long userId){
         this.userService.updateUser(user, userId);
         return user;

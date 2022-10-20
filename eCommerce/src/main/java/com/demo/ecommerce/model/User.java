@@ -1,14 +1,17 @@
 package com.demo.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -27,6 +30,8 @@ public class User {
     @JsonIgnore // to ignore json query
     private Set<UserRole> userRole = new HashSet<>();
 
+
+/*START*/
     public User() {
 
     }
@@ -55,8 +60,32 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Authority> set = new HashSet<>();
+        this.userRole.forEach(userRole1 -> {
+            set.add(new Authority(userRole1.getRole().getRoleName()));
+        } );
+        return null;
     }
 
     public String getPassword() {
@@ -129,4 +158,6 @@ public class User {
                 ", userRole=" + userRole +
                 '}';
     }
+    /*END*/
+
 }
